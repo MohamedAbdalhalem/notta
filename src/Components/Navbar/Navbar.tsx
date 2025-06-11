@@ -3,21 +3,22 @@ import { Link, NavLink, useNavigate } from "react-router-dom"
 import logo from '../../../public/7235470.png'
 export default function Navbar() {
   const token = localStorage.getItem('tkn')
-  const [isDark, setIsDark] = useState(true)
+  const [isDark, setIsDark] = useState('Dark-mode')
   const navigateToSignIn = useNavigate()
     function darkMode() {
-        if (localStorage.getItem('theme') === null) {
-            document.documentElement.classList.add('dark')
-            localStorage.setItem('theme', 'dark')
-            setIsDark(true)
-        } else {
-            document.documentElement.classList.remove('dark')
-            localStorage.removeItem('theme')
-            setIsDark(false)
-        }
+      if (localStorage.getItem('mode') === 'Dark-mode') {
+      localStorage.setItem('mode','Light-mode')
+      document.documentElement.classList.remove('dark')
+      setIsDark('Light-mode')
+    } else {
+      localStorage.setItem('mode','Dark-mode')
+      document.documentElement.classList.add('dark')
+      setIsDark('Dark-mode')
+    }
     }
     useEffect(() => {
-        darkMode()
+      darkMode()
+      
     }, [])
   function handleSignOut() {
     localStorage.removeItem('tkn')
@@ -52,7 +53,7 @@ export default function Navbar() {
         
 
         <li>
-          <p className="block py-2   rounded-sm md:bg-transparent md:p-0 " aria-current="page"><i onClick={darkMode}  className={isDark? 'cursor-pointer fa-solid fa-moon text-gray-900 dark:text-white' : 'cursor-pointer fa-solid fa-sun text-gray-900 dark:text-white' }></i></p>
+          <p className="block py-2   rounded-sm md:bg-transparent md:p-0 " aria-current="page"><i onClick={darkMode}  className={isDark === 'Dark-mode'? 'cursor-pointer fa-solid fa-moon text-gray-900 dark:text-white' : 'cursor-pointer fa-solid fa-sun text-gray-900 dark:text-white' }></i></p>
         </li>
       </ul>
     </div>
