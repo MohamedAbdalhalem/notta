@@ -17,7 +17,13 @@ export default function Navbar() {
     }
     }
     useEffect(() => {
-      darkMode()
+      if (localStorage.getItem('mode') === 'Dark-mode') {
+        document.documentElement.classList.add('dark')
+        setIsDark('Dark-mode')
+      } else {
+        document.documentElement.classList.remove('dark')
+        setIsDark('Light-mode')
+      }
       
     }, [])
   function handleSignOut() {
@@ -53,7 +59,7 @@ export default function Navbar() {
         
 
         <li>
-          <p className="block py-2   rounded-sm md:bg-transparent md:p-0 " aria-current="page"><i onClick={darkMode}  className={isDark === 'Dark-mode'? 'cursor-pointer fa-solid fa-moon text-gray-900 dark:text-white' : 'cursor-pointer fa-solid fa-sun text-gray-900 dark:text-white' }></i></p>
+          <p className="block py-2   rounded-sm md:bg-transparent md:p-0 " aria-current="page"><i onClick={darkMode}  className={isDark  === 'Dark-mode'? 'cursor-pointer fa-solid fa-moon text-gray-900 dark:text-white' : 'cursor-pointer fa-solid fa-sun text-gray-900 dark:text-white' }></i></p>
         </li>
       </ul>
     </div>
