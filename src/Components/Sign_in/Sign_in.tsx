@@ -37,7 +37,7 @@ export default function Sign_in() {
   return (
     <div className="p-5">
       <form className="max-w-lg mx-auto" onSubmit={handleSubmit(handleSignINn)} >
-        <h3 className="text-gray-800 text-center text-3xl mb-4 font-bold dark:text-white">Sign-up</h3>
+        <h3 className="text-gray-800 text-center text-3xl mb-4 font-bold dark:text-white">Sign-in</h3>
         {isCreated && <div className="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
           Welcome 
 </div>}
