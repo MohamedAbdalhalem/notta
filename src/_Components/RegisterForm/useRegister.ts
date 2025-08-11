@@ -11,7 +11,7 @@ export default function useRegister() {
  const handleRegister = useCallback((data: registerFormType) => {
   setLoading(true);
   axios.post('https://note-sigma-black.vercel.app/api/v1/users/signUp', data)
-    .then((res) => {
+    .then(() => {
       router.push('/login');
     })
       .catch((err) => {

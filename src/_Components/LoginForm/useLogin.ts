@@ -31,6 +31,6 @@ export default function useLogin() {
     .finally(() => {
       setLoading(false);
     });
- }, [router]);
+ }, [router,dispatch]);
     return {loading,handleSubmit,control,errors,handleLogin,iserror}
 }
