@@ -4,9 +4,7 @@ import {FormControl,IconButton,InputAdornment,InputLabel,TextField,Input,Box, Al
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Controller } from "react-hook-form"
-import SubmitButton from '../SubmitButton/SubmitButton';
-
-
+import SubmitButton from '../SubmitButton/SubmitButton';        
 import ErrorALert from '../ErrorAlert/ErrorALert';
 import useShowPassword from '../RegisterForm/useShowPassword';
 import useLogin from './useLogin';
@@ -26,7 +24,7 @@ export default function LoginForm() {
                 />
        )}
     />
-    <ErrorALert error={ errors.email?.message! } />
+    <ErrorALert error={ errors.email?.message } />
       
       <Controller
         control={control}
@@ -56,7 +54,7 @@ export default function LoginForm() {
         </FormControl>
         )}
       />
-      <ErrorALert error={ errors.password?.message! } />
+      <ErrorALert error={ errors.password?.message } />
       
       <SubmitButton loading={ loading } />
       </Box>

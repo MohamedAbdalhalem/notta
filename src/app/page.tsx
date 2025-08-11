@@ -41,7 +41,7 @@ export default function Home() {
           token: `3b8ny__${Token!}`
         }
       }
-    ).then(_ => {
+    ).then(() => {
        dispatch(getNotes(Token!));
     }).catch(err => {
       console.log(err)
@@ -65,7 +65,7 @@ export default function Home() {
           headers: {
             token: `3b8ny__${Token!}`
           }
-        }).then(_ => {
+        }).then(() => {
           dispatch(getNotes(Token!))
           setCurrentId(null)
         }).catch(err => {

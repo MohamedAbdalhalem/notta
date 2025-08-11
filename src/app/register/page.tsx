@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export default function register() {
+export default function Register() {
   const { Token } = useSelector((state: RootState) => state.authSlice);
   const router = useRouter();
 

@@ -24,7 +24,7 @@ export default function RegisterForm() {
             />
         )}
       />
-      <ErrorALert error={ errors.name?.message! } />
+      <ErrorALert error={ errors.name?.message } />
       <Controller
         control={control}
         name='email'
@@ -35,7 +35,7 @@ export default function RegisterForm() {
           />
         )}
       />
-      <ErrorALert error={ errors.email?.message! } />
+      <ErrorALert error={ errors.email?.message } />
       <Controller
         control={control}
         name='password'
@@ -64,7 +64,7 @@ export default function RegisterForm() {
         </FormControl>
         )}
       />
-      <ErrorALert error={ errors.password?.message! } />
+      <ErrorALert error={ errors.password?.message } />
       <Controller
         control={control}
         name='age'
@@ -75,7 +75,7 @@ export default function RegisterForm() {
           />
         )}
       />
-      <ErrorALert error={ errors.age?.message! } />
+      <ErrorALert error={ errors.age?.message } />
       <Controller
         control={control}
         name='phone'
@@ -86,7 +86,7 @@ export default function RegisterForm() {
           />
         )}
       />
-      <ErrorALert error={ errors.phone?.message! } /> 
+      <ErrorALert error={ errors.phone?.message } /> 
       
       <SubmitButton loading={ loading } />
       </Box>
