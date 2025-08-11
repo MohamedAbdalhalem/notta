@@ -1,103 +1,148 @@
-import Image from "next/image";
-
+'use client';
+import { RootState } from "_/lib/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "_/lib/redux/store";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { getNotes } from "_/lib/redux/notesSlice";
+import { TextField, Button, Stack, Paper} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import SendIcon from '@mui/icons-material/Send';
+import LoadingScreen from "_/_Components/LoadingScreen/LoadingScreen";
+import NoDataFound from "_/_Components/NoDataFound/NoDataFound";
+import axios from "axios";
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const { Token } = useSelector((state: RootState) => state.authSlice);
+  const { isError,isLoading,notes } = useSelector((state: RootState) => state.notesSlice);
+  const dispatch = useDispatch<AppDispatch>()
+  const router = useRouter()
+  const [currentID, setCurrentId] = useState<null | string>(null)
+  const titleRef = useRef<HTMLInputElement>(null)
+  const contentRef = useRef<HTMLInputElement>(null)
+  useEffect(() => {
+    
+    if (!Token) {
+      router.push("/login");
+    }
+  }, [Token, router]);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  useEffect(() => {
+    if (Token) {
+      dispatch(getNotes(Token));
+    }
+  }, [Token, dispatch]);
+  const handleDelete = async (id: string) => {
+  
+    await axios.delete(
+      `https://note-sigma-black.vercel.app/api/v1/notes/${id}`,
+      {
+        headers: {
+          token: `3b8ny__${Token!}`
+        }
+      }
+    ).then(_ => {
+       dispatch(getNotes(Token!));
+    }).catch(err => {
+      console.log(err)
+    });
+    
+  
+};
+
+  const handleUpdate = (id: string) => {
+    setCurrentId(id)
+  };
+  const  handleSaveChange =  (id: string) => {
+    if (titleRef.current?.value === '' || contentRef.current?.value === '') {
+      handleDelete(id)
+    } else {
+      async function update() {
+        await axios.put(`https://note-sigma-black.vercel.app/api/v1/notes/${id}`, {
+          "title": titleRef.current?.value,
+          "content": contentRef.current?.value
+        }, {
+          headers: {
+            token: `3b8ny__${Token!}`
+          }
+        }).then(_ => {
+          dispatch(getNotes(Token!))
+          setCurrentId(null)
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+      update()
+    }
+  }
+  if (isError) {
+    return <NoDataFound/>
+  }
+  if (isLoading) {
+    return <LoadingScreen/>
+  }
+  return   <Stack spacing={2} sx={{ px: '24px', py:'12px  ' }}>
+      {notes?.map((note) => (
+        <Paper
+          key={note._id}
+          elevation={2}
+          sx={{ p: 1.5, borderRadius: 2 }}
+          
+        >
+          <Stack
+            sx={{display : 'flex', alignItems:'center', flexDirection:'row',justifyContent:'space-between',flexWrap:'wrap',gap:'10px'}}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+            <TextField
+              // value={note.title}
+              defaultValue={note.title}
+              variant="outlined"
+              size="small"
+              inputRef={titleRef}
+              disabled={note._id === currentID ? false : true}
+              className="w-full md:w-[14%] text-wrap"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+            <TextField
+              // value={note.content}
+              defaultValue={note.content}
+              variant="outlined"
+              size="small"
+              inputRef={contentRef}
+              disabled={note._id === currentID ? false : true}
+              className="w-full md:w-[60%]"
+            />
+            {note._id === currentID ? <Button
+              variant="contained"
+              size="small"
+              color="primary"
+              endIcon={<SendIcon />}
+              onClick={()=> handleSaveChange(note._id)}
+              className="w-[48%] md:w-[11%]"
+            >
+              Save
+            </Button> : <Button
+              variant="contained"
+              size="small"
+              color="primary"
+              startIcon={<EditIcon />}
+              onClick={() => handleUpdate(note._id)}
+              className="w-[48%] md:w-[11%]"
+            >
+              Update
+            </Button>}
+            
+            
+            <Button
+              variant="outlined"
+              size="small"
+              color="error"
+              startIcon={<DeleteIcon />}
+              onClick={() => handleDelete(note._id)}
+              className="w-[48%] md:w-[11%]"
+            >
+              Delete
+            </Button>
+          </Stack>
+        </Paper>
+      ))}
+    </Stack>;
 }
